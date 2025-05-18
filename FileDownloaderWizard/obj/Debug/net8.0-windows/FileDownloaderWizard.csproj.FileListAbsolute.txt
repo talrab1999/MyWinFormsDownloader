@@ -17,3 +17,4 @@ C:\Users\talra\source\repos\FileDownloaderWizard\FileDownloaderWizard\obj\Debug\
 C:\Users\talra\source\repos\FileDownloaderWizard\FileDownloaderWizard\obj\Debug\net8.0-windows\FileDownloaderWizard.pdb
 C:\Users\talra\source\repos\FileDownloaderWizard\FileDownloaderWizard\obj\Debug\net8.0-windows\FileDownloaderWizard.genruntimeconfig.cache
 C:\Users\talra\source\repos\FileDownloaderWizard\FileDownloaderWizard\obj\Debug\net8.0-windows\ref\FileDownloaderWizard.dll
+C:\Users\talra\source\repos\FileDownloaderWizard\FileDownloaderWizard\obj\Debug\net8.0-windows\FileDownloaderWizard.sourcelink.json

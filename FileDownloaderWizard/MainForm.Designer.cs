@@ -60,6 +60,7 @@
             downloadButton.TabIndex = 2;
             downloadButton.Text = "Download";
             downloadButton.UseVisualStyleBackColor = true;
+            downloadButton.Click += downloadButton_Click;
             // 
             // refreshButton
             // 
@@ -69,6 +70,7 @@
             refreshButton.TabIndex = 3;
             refreshButton.Text = "Refresh";
             refreshButton.UseVisualStyleBackColor = true;
+            refreshButton.Click += refreshButton_Click;
             // 
             // MainForm
             // 
