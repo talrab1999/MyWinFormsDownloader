@@ -1,7 +1,10 @@
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using Microsoft.VisualBasic.Devices;  
+using System.IO;
 
 namespace FileDownloaderWizard
 {
@@ -10,20 +13,33 @@ namespace FileDownloaderWizard
         private List<FileConfig> _configs;
         private int _currentIndex = 0;
         private readonly string ConfigUrl = "https://4qgz7zu7l5um367pzultcpbhmm0thhhg.lambda-url.us-west-2.on.aws/";
-
+        private readonly string DownloadFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"FileDownloaderWizardDownloads");
         public MainForm()
         {
             InitializeComponent();
-
-            this.refreshButton.Click += refreshButton_Click;
-            this.downloadButton.Click += downloadButton_Click;
-
+            Directory.CreateDirectory(DownloadFolder);
             InitializeConfigsAsync();
         }
         private async Task InitializeConfigsAsync()
         {
-            _configs = await FetchFileConfigsAsync(ConfigUrl);
-            _configs = _configs.OrderByDescending(f => f.Score).ToList();
+            //_configs = await FetchFileConfigsAsync(ConfigUrl);
+            //_configs = _configs.OrderByDescending(f => f.Score).ToList();
+            //_currentIndex = 0;
+            //DisplayCurrentConfig();
+            var all = await FetchFileConfigsAsync(ConfigUrl);
+            var ci = new ComputerInfo();
+            long ramMb = (long)ci.AvailablePhysicalMemory / 1024 / 1024;
+            var driveRoot = Path.GetPathRoot(DownloadFolder);
+            long diskMb = new DriveInfo(driveRoot).AvailableFreeSpace / 1024 / 1024;
+            int osVer = Environment.OSVersion.Version.Major;
+
+            _configs = all.Where(c =>
+                      ramMb >= c.Ram &&   
+                      diskMb >= c.Disk &&   
+                      osVer >= c.Os)
+                  .OrderByDescending(c => c.Score)  
+                  .ToList();
+
             _currentIndex = 0;
             DisplayCurrentConfig();
         }
@@ -34,7 +50,7 @@ namespace FileDownloaderWizard
                 if (_configs == null || !_configs.Any()) return;
                 var cfg = _configs[_currentIndex];
                 titleLabel.Text = cfg.Title;
-                pictureBox.Load(cfg.ImageUrl); // this thing no bueno no work
+                pictureBox.Load(cfg.ImageUrl); 
             }
             catch (Exception ex)
             {
@@ -56,22 +72,37 @@ namespace FileDownloaderWizard
                 var cfg = _configs[_currentIndex];
 
                 titleLabel.Text = cfg.Title;
-                pictureBox.Load(cfg.ImageUrl); // this thing no bueno no work
+                pictureBox.Load(cfg.ImageUrl);
 
                 string fileName = Path.GetFileName(new Uri(cfg.FileUrl).LocalPath);
-                string tempDir = Path.GetTempPath();
-                string localPath = Path.Combine(tempDir, fileName);
+                string localPath = Path.Combine(DownloadFolder, fileName);
 
                 if (File.Exists(localPath))
                 {
                     MessageBox.Show("Already downloaded. Opening folder...");
-                    Process.Start("explorer.exe", tempDir);
+                    Process.Start("explorer.exe", DownloadFolder);
                 }
                 else
                 {
                     downloadButton.Enabled = false;
-                    // download somehow
-                    downloadButton.Enabled = true;
+                    //using var http = new HttpClient();
+                    //var data = await http.GetByteArrayAsync(cfg.FileUrl);
+                    //File.WriteAllBytes(localPath, data);
+                    downloadProgressBar.Value = 0;
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadProgressChanged += (s, ev) =>
+                        {
+                            downloadProgressBar.Value = ev.ProgressPercentage;
+                        };
+
+                        client.DownloadFileCompleted += (s, ev) =>
+                        {
+                            downloadButton.Enabled = true;
+                        };
+
+                        await client.DownloadFileTaskAsync(new Uri(cfg.FileUrl), localPath);
+                    }
 
                     Process.Start(localPath);
                 }
@@ -89,6 +120,7 @@ namespace FileDownloaderWizard
                 return;
             _currentIndex = (_currentIndex + 1) % _configs.Count;
             DisplayCurrentConfig();
+            downloadProgressBar.Value = 0;
         }
     }
 }

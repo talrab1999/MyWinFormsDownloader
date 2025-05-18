@@ -32,29 +32,31 @@
             pictureBox = new PictureBox();
             downloadButton = new Button();
             refreshButton = new Button();
+            downloadProgressBar = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // titleLabel
             // 
             titleLabel.AutoSize = true;
-            titleLabel.Location = new Point(163, 46);
+            titleLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
+            titleLabel.Location = new Point(171, 33);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(245, 30);
+            titleLabel.Size = new Size(260, 30);
             titleLabel.TabIndex = 0;
             titleLabel.Text = "Mini-Download Manager";
             // 
             // pictureBox
             // 
-            pictureBox.Location = new Point(226, 98);
+            pictureBox.Location = new Point(116, 95);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(138, 65);
+            pictureBox.Size = new Size(364, 178);
             pictureBox.TabIndex = 1;
             pictureBox.TabStop = false;
             // 
             // downloadButton
             // 
-            downloadButton.Location = new Point(149, 244);
+            downloadButton.Location = new Point(125, 301);
             downloadButton.Name = "downloadButton";
             downloadButton.Size = new Size(120, 37);
             downloadButton.TabIndex = 2;
@@ -64,7 +66,7 @@
             // 
             // refreshButton
             // 
-            refreshButton.Location = new Point(307, 244);
+            refreshButton.Location = new Point(333, 301);
             refreshButton.Name = "refreshButton";
             refreshButton.Size = new Size(120, 37);
             refreshButton.TabIndex = 3;
@@ -72,11 +74,19 @@
             refreshButton.UseVisualStyleBackColor = true;
             refreshButton.Click += refreshButton_Click;
             // 
+            // downloadProgressBar
+            // 
+            downloadProgressBar.Location = new Point(125, 361);
+            downloadProgressBar.Name = "downloadProgressBar";
+            downloadProgressBar.Size = new Size(120, 23);
+            downloadProgressBar.TabIndex = 4;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(597, 411);
+            Controls.Add(downloadProgressBar);
             Controls.Add(refreshButton);
             Controls.Add(downloadButton);
             Controls.Add(pictureBox);
@@ -96,5 +106,6 @@
         private PictureBox pictureBox;
         private Button downloadButton;
         private Button refreshButton;
+        private ProgressBar downloadProgressBar;
     }
 }

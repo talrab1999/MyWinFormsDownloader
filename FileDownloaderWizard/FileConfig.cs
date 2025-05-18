@@ -23,6 +23,8 @@ namespace FileDownloaderWizard
         public int Score { get; set; }
 
         [JsonProperty("validators")]
-        public JObject Validators { get; set; }
+        public int Ram { get; set; }
+        public int Disk { get; set; }
+        public int Os { get; set; }
     }
 }
