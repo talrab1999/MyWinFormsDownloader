@@ -38,7 +38,8 @@
             // titleLabel
             // 
             titleLabel.AutoSize = true;
-            titleLabel.Location = new Point(163, 46);
+            titleLabel.Dock = DockStyle.Top;
+            titleLabel.Location = new Point(0, 0);
             titleLabel.Name = "titleLabel";
             titleLabel.Size = new Size(245, 30);
             titleLabel.TabIndex = 0;
@@ -46,15 +47,15 @@
             // 
             // pictureBox
             // 
-            pictureBox.Location = new Point(226, 98);
+            pictureBox.Location = new Point(116, 95);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(138, 65);
+            pictureBox.Size = new Size(364, 178);
             pictureBox.TabIndex = 1;
             pictureBox.TabStop = false;
             // 
             // downloadButton
             // 
-            downloadButton.Location = new Point(149, 244);
+            downloadButton.Location = new Point(128, 319);
             downloadButton.Name = "downloadButton";
             downloadButton.Size = new Size(120, 37);
             downloadButton.TabIndex = 2;
@@ -64,7 +65,7 @@
             // 
             // refreshButton
             // 
-            refreshButton.Location = new Point(307, 244);
+            refreshButton.Location = new Point(341, 319);
             refreshButton.Name = "refreshButton";
             refreshButton.Size = new Size(120, 37);
             refreshButton.TabIndex = 3;

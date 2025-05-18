@@ -10,14 +10,11 @@ namespace FileDownloaderWizard
         private List<FileConfig> _configs;
         private int _currentIndex = 0;
         private readonly string ConfigUrl = "https://4qgz7zu7l5um367pzultcpbhmm0thhhg.lambda-url.us-west-2.on.aws/";
-
+        private readonly string DownloadFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"FileDownloaderWizardDownloads");
         public MainForm()
         {
             InitializeComponent();
-
-            this.refreshButton.Click += refreshButton_Click;
-            this.downloadButton.Click += downloadButton_Click;
-
+            Directory.CreateDirectory(DownloadFolder);
             InitializeConfigsAsync();
         }
         private async Task InitializeConfigsAsync()
@@ -59,21 +56,21 @@ namespace FileDownloaderWizard
                 pictureBox.Load(cfg.ImageUrl); // this thing no bueno no work
 
                 string fileName = Path.GetFileName(new Uri(cfg.FileUrl).LocalPath);
-                string tempDir = Path.GetTempPath();
-                string localPath = Path.Combine(tempDir, fileName);
+                string localPath = Path.Combine(DownloadFolder, fileName);
 
                 if (File.Exists(localPath))
                 {
                     MessageBox.Show("Already downloaded. Opening folder...");
-                    Process.Start("explorer.exe", tempDir);
+                    Process.Start("explorer.exe", DownloadFolder);
                 }
                 else
                 {
                     downloadButton.Enabled = false;
-                    // download somehow
-                    downloadButton.Enabled = true;
-
+                    using var http = new HttpClient();
+                    var data = await http.GetByteArrayAsync(cfg.FileUrl);
+                    File.WriteAllBytes(localPath, data);
                     Process.Start(localPath);
+                    downloadButton.Enabled = true;
                 }
             }
             catch (Exception ex)
